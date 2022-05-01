@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TextInput, Button, Alert, ScrollView } from 'react-native';
+import { StyleSheet, } from 'react-native';
 import React, { useState, useEffect } from 'react';
 // import react native gesture handler
 import 'react-native-gesture-handler';
@@ -17,7 +17,8 @@ export default function ChatApp() {
   const Stack = createStackNavigator();
 
   return (
-    <NavigationContainer style={styles.app_container}>
+
+    <NavigationContainer>
       {/* initialRouteName should be one of Stack.Screens */}
       <Stack.Navigator initialRouteName='Home'>
         <Stack.Screen name='Home' component={Start} />
@@ -28,9 +29,6 @@ export default function ChatApp() {
 }
 
 const styles = StyleSheet.create({
-  app_container: {
-    fontFamily: 'Poppins',
-  },
   one: {
     backgroundColor: 'gold',
     width: 50, 
