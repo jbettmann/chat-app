@@ -22,12 +22,19 @@ export function Start(props) {
     // TouchableWithoutFeedback surrounds whole to dismiss keyboard when touch outside keyboard.
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
+
         <ImageBackground style={styles.background_image} source={BackgroundImage} resizeMode="cover"> 
+
           <Text style={styles.title}>Chat</Text>
+          
           <View style={styles.login_container}>
+
+            {/* Input to create username to pass to Chat screen */}
             <TextInput style={styles.textInput} onChangeText={(username) => setUsername(username)} value={username} placeholder= 'Create Username' /> 
+            
             <View>
               <Text>Choose Background Color:</Text>
+              {/* Sets background color for chat screen */}
               <View style={styles.choose_background}>
                 <TouchableOpacity style={[styles.background_color1, styles.box]} onPress={() => setBackgroundColor(colors.lightGray)} />
                 <TouchableOpacity style={[styles.background_color2, styles.box]} onPress={() => setBackgroundColor(colors.green)} />
@@ -35,6 +42,7 @@ export function Start(props) {
                 <TouchableOpacity style={[styles.background_color4, styles.box]} onPress={() => setBackgroundColor(colors.red)} />
               </View>
             </View>
+
             {/* navigates to Chat screen and send username state as prop to use in Chat */}
             <Pressable 
               // sets button background color to color chosen  
@@ -43,6 +51,7 @@ export function Start(props) {
               title='Get Chatting' >
               <Text style={styles.button_text}>Start Chatting</Text>
             </Pressable>
+            
           </View>
         </ImageBackground>
       </View>
@@ -83,6 +92,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   choose_background: {
+    width: '88%',
     flexDirection: 'row',
     marginTop: 12,
   },
