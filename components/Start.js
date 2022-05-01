@@ -1,5 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TextInput, Button, ScrollView, ImageBackground, TouchableOpacity, Pressable, TouchableWithoutFeedback, Keyboard  } from 'react-native';
+import { StyleSheet, 
+        Text, 
+        View, 
+        TextInput, 
+        ImageBackground, 
+        TouchableOpacity, 
+        Pressable, 
+        TouchableWithoutFeedback, 
+        Keyboard,  } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import BackgroundImage from '../assets/Background_Image.png';
 import Icon from '../assets/icon.svg';
@@ -7,10 +15,10 @@ import Icon from '../assets/icon.svg';
 export function Start(props) {
 
   const colors = {
-    lightGray: '#090C08',
-    green: '#474056',
-    yellow: '#8A95A5',
-    red: '#B9C6AE'
+    black: '#090C08',
+    darkPurple: '#474056',
+    blue: '#8A95A5',
+    green: '#B9C6AE'
   };
 
   // sets username to state
@@ -36,15 +44,20 @@ export function Start(props) {
               <Text>Choose Background Color:</Text>
               {/* Sets background color for chat screen */}
               <View style={styles.choose_background}>
-                <TouchableOpacity style={[styles.background_color1, styles.box]} onPress={() => setBackgroundColor(colors.lightGray)} />
-                <TouchableOpacity style={[styles.background_color2, styles.box]} onPress={() => setBackgroundColor(colors.green)} />
-                <TouchableOpacity style={[styles.background_color3, styles.box]} onPress={() => setBackgroundColor(colors.yellow)} />
-                <TouchableOpacity style={[styles.background_color4, styles.box]} onPress={() => setBackgroundColor(colors.red)} />
+                <TouchableOpacity style={[styles.background_color1, styles.box]} onPress={() => setBackgroundColor(colors.black)} />
+                <TouchableOpacity style={[styles.background_color2, styles.box]} onPress={() => setBackgroundColor(colors.darkPurple)} />
+                <TouchableOpacity style={[styles.background_color3, styles.box]} onPress={() => setBackgroundColor(colors.blue)} />
+                <TouchableOpacity style={[styles.background_color4, styles.box]} onPress={() => setBackgroundColor(colors.green)} />
               </View>
             </View>
 
             {/* navigates to Chat screen and send username state as prop to use in Chat */}
             <Pressable 
+              // accessibility properties 
+              accessible={true}
+              accessibilityLabel='Tap to start chatting'
+              accessibilityHint='Once button is tapped, you will enter the chat screen to begin chatting'
+              accessibilityRole='button'
               // sets button background color to color chosen  
               style={[{ backgroundColor: backgroundColor }, styles.button ]}
               onPress={() => props.navigation.navigate('Chat', { username: username, backgroundColor: backgroundColor })} 
