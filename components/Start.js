@@ -10,7 +10,6 @@ import { StyleSheet,
         Keyboard,  } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import BackgroundImage from '../assets/Background_Image.png';
-import Icon from '../assets/icon.svg';
 
 export function Start(props) {
 
@@ -22,8 +21,8 @@ export function Start(props) {
   };
 
   // sets username to state
-  const [username, setUsername ] = useState('');
-  const [backgroundColor, setBackgroundColor ] = useState('#757083');
+  let [username, setUsername ] = useState('');
+  let [backgroundColor, setBackgroundColor ] = useState('#757083');
 
 
   return (
@@ -33,7 +32,7 @@ export function Start(props) {
 
         <ImageBackground style={styles.background_image} source={BackgroundImage} resizeMode="cover"> 
 
-          <Text style={styles.title}>Chat</Text>
+          <Text style={styles.title}>ChatApp</Text>
           
           <View style={styles.login_container}>
 
