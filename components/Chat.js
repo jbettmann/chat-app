@@ -1,12 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, KeyboardAvoidingView, Platform } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import NetInfo from '@react-native-community/netinfo';
 import React, { useState, useEffect, useCallback } from 'react';
-import { Bubble, GiftedChat } from 'react-native-gifted-chat';
+import { Bubble, GiftedChat, InputToolbar } from 'react-native-gifted-chat';
 
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, onSnapshot, addDoc, query, orderBy } from "firebase/firestore";
 import { getAuth, onAuthStateChanged, signInAnonymously } from "firebase/auth";
-import { useWorkletCallback } from 'react-native-reanimated';
+import { async } from '@firebase/util';
+
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -38,6 +41,8 @@ export function Chat(props) {
     avatar: '',
   });
 
+  const [connection, setConnection] = useState(false);
+
   // props from Start screen
   let { username, backgroundColor } = props.route.params;
 
@@ -46,9 +51,21 @@ export function Chat(props) {
 
   // Once component mounts, useEffect sets message state to below.
   useEffect(() => {
-    
     // sets title of Chat screen to username (Needs to be in useEffect otherwise throws error).
     props.navigation.setOptions({ title: username })
+
+    // checks if user is on or offline 
+    NetInfo.fetch().then(connection => {
+      if (connection.isConnected) {
+        setConnection(true);
+        console.log('online');
+      } else {
+        console.log('offline');
+      }
+    });
+
+    // calls getMessages which stores messages in native storage, AsyncStorage
+    getMessages();
     
     const auth = getAuth();
 
@@ -74,6 +91,34 @@ export function Chat(props) {
     }
   }, [uid]);
 
+  // gets messages stored in native storage, AsyncStorage
+  const getMessages = async () => {
+    let message = '';
+    try {
+      message = await AsyncStorage.getItem('messages') || [];
+      setMessages(JSON.parse(message));
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  // Saves current message state to AsyncStorage
+  const saveMessages = async () => { 
+    try {
+      await AsyncStorage.setItem('messages', JSON.stringify(messages));
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  const deleteMessages = async () => {
+    try {
+      await AsyncStorage.removeItem('messages');
+      setMessages([]);
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 
   // Adds news doc to collection 
   const addMessage = (message) => {
@@ -105,9 +150,10 @@ export function Chat(props) {
 
   // when new message is sent, its appended (added) to pervious "message" state and displayed in chat by calling addMessage
   const onSend = useCallback((messages = []) => {
-    setMessages(perviousMessages => GiftedChat.append(perviousMessages, messages))
+    setMessages(perviousMessages => GiftedChat.append(perviousMessages, messages));
     addMessage(messages[0]);
-  }, [])
+    saveMessages();
+  }, []);
 
   // changes color of senders bubble. Function called in 'renderBubble' of <GiftedCard /> component 
   const renderBubble = (props) => {
@@ -125,11 +171,22 @@ export function Chat(props) {
     )
   }
 
+  const renderInputToolbar = (props) => {
+    if (connection == false) {
+    } else {
+      return (
+        <InputToolbar 
+        {...props}
+        />
+      );
+    }
+  }
 
   return (
       <View style={[{ backgroundColor: backgroundColor }, styles.container]} >
         <GiftedChat
         renderBubble={renderBubble}
+        renderInputToolbar={renderInputToolbar}
         messages={messages}
         isTyping={true}
         onSend={message => onSend(message)}

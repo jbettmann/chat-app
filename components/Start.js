@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, 
         Text, 
         View, 
+        Image,
         TextInput, 
         ImageBackground, 
         TouchableOpacity, 
@@ -10,6 +11,7 @@ import { StyleSheet,
         Keyboard,  } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import BackgroundImage from '../assets/Background_Image.png';
+import icon from '../assets/icon2.png';
 
 export function Start(props) {
 
@@ -35,18 +37,53 @@ export function Start(props) {
           <Text style={styles.title}>ChatApp</Text>
           
           <View style={styles.login_container}>
-
-            {/* Input to create username to pass to Chat screen */}
-            <TextInput style={styles.textInput} onChangeText={(username) => setUsername(username)} value={username} placeholder= 'Create Username' /> 
+            <View style={styles.textBox}>
+              <Image source={icon} style={styles.icon} />
+              {/* Input to create username to pass to Chat screen */}
+              <TextInput 
+                style={styles.input}
+                onChangeText={(username) => setUsername(username)} 
+                value={username} placeholder= 'Create Username' 
+              />
+            
+            </View>
             
             <View>
               <Text>Choose Background Color:</Text>
               {/* Sets background color for chat screen */}
               <View style={styles.choose_background}>
-                <TouchableOpacity style={[styles.background_color1, styles.box]} onPress={() => setBackgroundColor(colors.black)} />
-                <TouchableOpacity style={[styles.background_color2, styles.box]} onPress={() => setBackgroundColor(colors.darkPurple)} />
-                <TouchableOpacity style={[styles.background_color3, styles.box]} onPress={() => setBackgroundColor(colors.blue)} />
-                <TouchableOpacity style={[styles.background_color4, styles.box]} onPress={() => setBackgroundColor(colors.green)} />
+                <TouchableOpacity 
+                  accessible={true}
+                  accessibilityLabel='Background color black'
+                  accessibilityHint='Lets you choose a color for the chat background'
+                  accessibilityRole='button'
+                  style={[styles.background_color1, styles.box]} 
+                  onPress={() => setBackgroundColor(colors.black)} 
+                />
+                <TouchableOpacity 
+                  accessible={true}
+                  accessibilityLabel='Background color dark purple'
+                  accessibilityHint='Lets you choose a color for the chat background'
+                  accessibilityRole='button'
+                  style={[styles.background_color2, styles.box]} 
+                  onPress={() => setBackgroundColor(colors.darkPurple)} 
+                />
+                <TouchableOpacity 
+                  accessible={true}
+                  accessibilityLabel='Background color blue'
+                  accessibilityHint='Lets you choose a color for the chat background'
+                  accessibilityRole='button'
+                  style={[styles.background_color3, styles.box]} 
+                  onPress={() => setBackgroundColor(colors.blue)} 
+                />
+                <TouchableOpacity 
+                  accessible={true}
+                  accessibilityLabel='Background color green'
+                  accessibilityHint='Lets you choose a color for the chat background'
+                  accessibilityRole='button'
+                  style={[styles.background_color4, styles.box]} 
+                  onPress={() => setBackgroundColor(colors.green)} 
+                />
               </View>
             </View>
 
@@ -93,15 +130,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-evenly',
   },
-  textInput: {
-    fontSize: 16,
-    fontWeight: '300',
+  textBox: {
     width: '88%',
     height: 60,
-    color: 'rgba(117,112,131,0.5)',
     borderColor: 'grey',
     borderWidth: 1,
     padding: 20,
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  input: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: '300',
+    color: '#403d39',
+    opacity: 0.8
+  },
+  icon: {
+    width: 20,
+    height: 20,
+    marginRight: 10
   },
   choose_background: {
     width: '88%',

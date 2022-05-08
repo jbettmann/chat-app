@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, } from 'react-native';
+
 import React, { useState, useEffect } from 'react';
 // import react native gesture handler
 import 'react-native-gesture-handler';
