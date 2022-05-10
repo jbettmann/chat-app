@@ -1,14 +1,17 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, KeyboardAvoidingView, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
 import React, { useState, useEffect, useCallback } from 'react';
 import { Bubble, GiftedChat, InputToolbar } from 'react-native-gifted-chat';
+import MapView from 'react-native-maps';
+import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, onSnapshot, addDoc, query, orderBy } from "firebase/firestore";
 import { getAuth, onAuthStateChanged, signInAnonymously } from "firebase/auth";
-import { async } from '@firebase/util';
+import { getStorage } from "firebase/storage";
+
+import CustomActions from './CustomActions.js';
 
 
 // Your web app's Firebase configuration
@@ -32,15 +35,19 @@ export function Chat(props) {
 
   // Sets message state to empty array
   const [messages, setMessages ] = useState([]);
+  // Sets image state
+  const [image, setImage] = useState(null);
+  // Sets location state
+  const [location, setLocation] = useState(null);
   // Sets user id for authentication 
-  const [uid, setUid] = useState();
+  const [uid, setUid] = useState(0);
   // User object for Gifted Chat
   const [user, setUser] = useState({
     _id: '',
     name: '',
     avatar: '',
   });
-
+  // Set connection state to default 
   const [connection, setConnection] = useState(false);
 
   // props from Start screen
@@ -60,17 +67,17 @@ export function Chat(props) {
         setConnection(true);
         console.log('online');
       } else {
+        setConnection(false);
         console.log('offline');
+        // calls getMessages which stores messages in native storage, AsyncStorage
+        getMessages();
       }
     });
-
-    // calls getMessages which stores messages in native storage, AsyncStorage
-    getMessages();
     
     const auth = getAuth();
 
     const authUnsubscribe = onAuthStateChanged(auth, async (user) => {
-      if(!user) {
+      if(!user) { 
         await signInAnonymously(auth);
       }
       // set user and logged in text state once authenticated
@@ -127,8 +134,13 @@ export function Chat(props) {
       _id: message._id,
       text: message.text || '',
       createdAt: message.createdAt,
-      user: user
-    })
+      user: user,
+      image: message.image || null,
+      location: message.location || null,
+    });
+    if (message.text === 'delete') {
+      deleteMessages();
+    }
   }
 
   // Takes SnapShot of messages collection, then adds new message to message state
@@ -140,9 +152,11 @@ export function Chat(props) {
       let data = doc.data();
       message.push({
         _id: data._id,
-        text: data.text,
+        text: data.text || "",
         createdAt: data.createdAt.toDate(),
         user: data.user,
+        image: data.image || null,
+      location: data.location || null,
       });
     });
     setMessages(message)
@@ -154,6 +168,38 @@ export function Chat(props) {
     addMessage(messages[0]);
     saveMessages();
   }, []);
+
+  // function that renders custom action send image, take photo and send geo location from CustomActions component 
+  const renderCustomActions = (props) => {
+    return (
+    <ActionSheetProvider >
+      <CustomActions {...props} onSend={onSend} />
+    </ActionSheetProvider>
+    )
+  }
+
+  // Check if message is a geo location. If so, sends in message
+  const renderCustomView = (props) => {
+    const { currentMessage } = props;
+    if (currentMessage.location) {
+      return (
+        <MapView
+          style={{ 
+            width: 150, 
+            height: 100, 
+            borderRadius: 13, 
+            margin: 3 }}
+            region={{
+              latitude: currentMessage.location.latitude,
+              longitude: currentMessage.location.longitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+          }}
+        />
+      );
+    }
+    return null;
+  }
 
   // changes color of senders bubble. Function called in 'renderBubble' of <GiftedCard /> component 
   const renderBubble = (props) => {
@@ -187,6 +233,8 @@ export function Chat(props) {
         <GiftedChat
         renderBubble={renderBubble}
         renderInputToolbar={renderInputToolbar}
+        renderActions={renderCustomActions}
+        renderCustomView={renderCustomView}
         messages={messages}
         isTyping={true}
         onSend={message => onSend(message)}
