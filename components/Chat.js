@@ -6,30 +6,12 @@ import { Bubble, GiftedChat, InputToolbar } from 'react-native-gifted-chat';
 import MapView from 'react-native-maps';
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot, addDoc, query, orderBy } from "firebase/firestore";
+import { db, app } from './firebase';
+import {  collection, onSnapshot, addDoc, query, orderBy } from "firebase/firestore";
 import { getAuth, onAuthStateChanged, signInAnonymously } from "firebase/auth";
-import { getStorage } from "firebase/storage";
 
 import CustomActions from './CustomActions.js';
 
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyCFQgCjWaTEk0crS4YDykDmovtymRa37II",
-  authDomain: "chat-app-2-350db.firebaseapp.com",
-  projectId: "chat-app-2-350db",
-  storageBucket: "chat-app-2-350db.appspot.com",
-  messagingSenderId: "24917673340",
-  appId: "1:24917673340:web:c00e4d3a4de7fe70ec50f9",
-  measurementId: "G-WKJSBLK77J"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-// Initialize Cloud Firestore and get a reference to the service
-const db = getFirestore(app);
 
 export function Chat(props) {
 
@@ -156,7 +138,7 @@ export function Chat(props) {
         createdAt: data.createdAt.toDate(),
         user: data.user,
         image: data.image || null,
-      location: data.location || null,
+        location: data.location || null,
       });
     });
     setMessages(message)
@@ -173,7 +155,7 @@ export function Chat(props) {
   const renderCustomActions = (props) => {
     return (
     <ActionSheetProvider >
-      <CustomActions {...props} onSend={onSend} />
+      <CustomActions {...props} />
     </ActionSheetProvider>
     )
   }
