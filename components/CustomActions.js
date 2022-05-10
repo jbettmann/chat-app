@@ -3,14 +3,17 @@ import React from 'react';
 import * as Location from 'expo-location';
 import * as ImagePicker from 'expo-image-picker';
 
-import { useActionSheet } from "@expo/react-native-action-sheet";
+import { useActionSheet, connectActionSheet } from "@expo/react-native-action-sheet";
+import { storage } from './firebase';
 
 import firebase from 'firebase/compat/app';
-import 'firebase/compat/firestore';
 import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
+import { getDownloadURL, ref, uploadBytes, uploadBytesResumable } from '@firebase/storage';
 
 
-const CustomActions = (props) => {
+
+const CustomActionsComp = (props) => {
   
   // lets user pick image from library to send in chat
   const pickImage = async () => {
@@ -19,7 +22,7 @@ const CustomActions = (props) => {
 
     if(status === 'granted') {
       let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: 'All',
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
       }).catch(error => console.log(error));
       
       if (!result.cancelled) {
@@ -63,31 +66,38 @@ const CustomActions = (props) => {
 
   // uploads image to firestore database 
   const uploadImage = async (uri) => {
-    const blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function () {
-        resolve(xhr.response);
-      };
-      xhr.onerror = function (e) {
-        console.log(e);
-        reject(new TypeError("Network request failed"));
-      };
-      xhr.responseType = "blob";
-      xhr.open("GET", uri, true);
-      xhr.send(null);
-    });
+    // const blob = await new Promise((resolve, reject) => {
+    //   const xhr = new XMLHttpRequest();
+    //   xhr.onload = function () {
+    //     resolve(xhr.response);
+    //   };
+    //   xhr.onerror = function (e) {
+    //     console.log(e);
+    //     reject(new TypeError("Network request failed"));
+    //   };
+    //   xhr.responseType = "blob";
+    //   xhr.open("GET", uri, true);
+    //   xhr.send(null);
+    // });
 
     const imageNameBefore = uri.split("/");
     const imageName = imageNameBefore[imageNameBefore.length - 1];
+    console.log('image:', imageName)
 
-    const ref = firebase.storage().ref().child(`images/${imageName}`);
+    const storageRef = ref(storage, `images/${imageName}`)
+    // const ref = firebase.storage().ref().child(`images/${imageName}`)
+    const img = await fetch(uri);
+    const bytes = await img.blob()
 
-    const snapshot = await ref.put(blob);
+    const imageUpload = await uploadBytes(storageRef, bytes)
 
-    blob.close();
+    // const snapshot = await storageRef.put(blob);
+    
+    // blob.close();n
 
     // retrieves image URL from server
-    return await snapshot.ref.getDownloadURL();
+    return await getDownloadURL(storageRef, `images/${imageName}`);
+    // snapshot.ref.getDownloadURL();
   };
 
   const { showActionSheetWithOptions } = useActionSheet();  
@@ -132,6 +142,8 @@ const CustomActions = (props) => {
   )
 }
 
+const CustomActions = connectActionSheet(CustomActionsComp)
+
 export default CustomActions
 
 const styles = StyleSheet.create({
@@ -140,6 +152,7 @@ const styles = StyleSheet.create({
     height: 26,
     marginLeft: 10,
     marginBottom: 10,
+    overflow: 'hidden'
   },
   wrapper: {
     borderRadius: 13,
