@@ -2,7 +2,6 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import React from 'react';
 import * as Location from 'expo-location';
 import * as ImagePicker from 'expo-image-picker';
-import Storage from 'firebase/storage';
 
 import { useActionSheet } from "@expo/react-native-action-sheet";
 
@@ -81,9 +80,7 @@ const CustomActions = (props) => {
     const imageNameBefore = uri.split("/");
     const imageName = imageNameBefore[imageNameBefore.length - 1];
 
-    const storage = Storage.storage();
-    const storageRef = storage.reference()
-    const ref = storageRef.child(`images/${imageName}`);
+    const ref = firebase.storage().ref().child(`images/${imageName}`);
 
     const snapshot = await ref.put(blob);
 
