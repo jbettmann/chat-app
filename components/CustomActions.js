@@ -3,7 +3,7 @@ import React from 'react';
 import * as Location from 'expo-location';
 import * as ImagePicker from 'expo-image-picker';
 
-import { useActionSheet, connectActionSheet } from "@expo/react-native-action-sheet";
+import { useActionSheet } from "@expo/react-native-action-sheet";
 import { storage } from './firebase';
 
 import firebase from 'firebase/compat/app';
@@ -13,7 +13,7 @@ import { getDownloadURL, ref, uploadBytes, uploadBytesResumable } from '@firebas
 
 
 
-const CustomActionsComp = (props) => {
+const CustomActions = (props) => {
   
   // lets user pick image from library to send in chat
   const pickImage = async () => {
@@ -38,7 +38,7 @@ const CustomActionsComp = (props) => {
 
     if(status === 'granted') {
       let result = await ImagePicker.launchCameraAsync({
-        mediaTypes: 'All',
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
       }).catch(error => console.log(error));
       
       if (!result.cancelled) {
@@ -142,8 +142,6 @@ const CustomActionsComp = (props) => {
   )
 }
 
-const CustomActions = connectActionSheet(CustomActionsComp)
-
 export default CustomActions
 
 const styles = StyleSheet.create({
@@ -152,7 +150,6 @@ const styles = StyleSheet.create({
     height: 26,
     marginLeft: 10,
     marginBottom: 10,
-    overflow: 'hidden'
   },
   wrapper: {
     borderRadius: 13,
