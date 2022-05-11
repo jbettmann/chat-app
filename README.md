@@ -4,7 +4,7 @@
 
 This is a mobile chat app built with React Native. The app will provide users with a chat interface and options to share images and their location.
 
-<p float='middle'>
+<p float='center'>
   <img src='https://user-images.githubusercontent.com/96999730/167939261-167ba7d7-6349-4ab1-a993-5afbdea3cd74.PNG' width="30%" alt='screenshot of Chat App homepage' >
 
   <img src='https://user-images.githubusercontent.com/96999730/167939600-ad55bc77-4655-4136-ac16-6b02d90c1f94.PNG' width="30%" alt='screenshot of Chat App chatroom page' >
