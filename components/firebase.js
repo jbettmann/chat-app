@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getStorage } from 'firebase/storage';
+import { getStorage, deleteObject, ref } from 'firebase/storage';
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -18,5 +18,17 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 // Initialize Cloud Firestore and get a reference to the service
 export const db = getFirestore(app);
-
+// Connects Storage to db
 export const storage = getStorage(app)
+
+// deletes Storage images when "delete storage" is a message ***Does not work
+export const deleteStorage = () => {
+  const desertRef = ref(storage, 'images/');
+
+  // Delete the file
+  deleteObject(desertRef).then(() => {
+    console.log('File deleted successfully')
+  }).catch((error) => {
+    console.log("No go:", error)
+  });
+}
