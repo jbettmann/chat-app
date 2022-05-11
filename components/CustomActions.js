@@ -65,46 +65,34 @@ const CustomActions = (props) => {
 
   // uploads image to firestore database 
   const uploadImage = async (uri) => {
-    // const blob = await new Promise((resolve, reject) => {
-    //   const xhr = new XMLHttpRequest();
-    //   xhr.onload = function () {
-    //     resolve(xhr.response);
-    //   };
-    //   xhr.onerror = function (e) {
-    //     console.log(e);
-    //     reject(new TypeError("Network request failed"));
-    //   };
-    //   xhr.responseType = "blob";
-    //   xhr.open("GET", uri, true);
-    //   xhr.send(null);
-    // });
 
+    // how the image will be view in db
     const imageNameBefore = uri.split("/");
     const imageName = imageNameBefore[imageNameBefore.length - 1];
-    console.log('image:', imageName)
 
+    // references the storage db and which image to upload
     const storageRef = ref(storage, `images/${imageName}`)
-    // const ref = firebase.storage().ref().child(`images/${imageName}`)
+
+    // converts image from array to bytes
     const img = await fetch(uri);
     const bytes = await img.blob()
 
+    // uploads image to storageRef
     const imageUpload = await uploadBytes(storageRef, bytes)
-
-    // const snapshot = await storageRef.put(blob);
-    
-    // blob.close();n
 
     // retrieves image URL from server
     return await getDownloadURL(storageRef, `images/${imageName}`);
-    // snapshot.ref.getDownloadURL();
+    
   };
 
+  // connects ActionSheetProvider
   const { showActionSheetWithOptions } = useActionSheet();  
 
   const onActionPress = () => {
+    // options to choice from when action sheet displayed to user
     const options = ['Choose From Library', 'Take Picture', 'Send Location', 'Cancel'];
+    // sets cancel button 
     const cancelButtonIndex = options.length - 1;
-    const showSeparators = true;
     showActionSheetWithOptions({
       options,
       cancelButtonIndex,
