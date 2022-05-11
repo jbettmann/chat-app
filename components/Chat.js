@@ -6,7 +6,7 @@ import { Bubble, GiftedChat, InputToolbar } from 'react-native-gifted-chat';
 import MapView from 'react-native-maps';
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 
-import { db, app } from './firebase';
+import { db, deleteStorage } from './firebase';
 import {  collection, onSnapshot, addDoc, query, orderBy } from "firebase/firestore";
 import { getAuth, onAuthStateChanged, signInAnonymously } from "firebase/auth";
 
@@ -120,7 +120,10 @@ export function Chat(props) {
       image: message.image || null,
       location: message.location || null,
     });
-    if (message.text === 'delete') {
+    if (message.text === 'delete storage') {
+      deleteStorage();
+    }
+    if (message.text === 'delete ') {
       deleteMessages();
     }
   }
