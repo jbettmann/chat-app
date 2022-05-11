@@ -6,7 +6,7 @@ This is a mobile chat app built with React Native. The app will provide users wi
 
 <p float='middle'>
   <img src='https://user-images.githubusercontent.com/96999730/167939261-167ba7d7-6349-4ab1-a993-5afbdea3cd74.PNG' width="30%" alt='screenshot of Chat App homepage' >
-  <img src=# >
+  <p></p>
   <img src='https://user-images.githubusercontent.com/96999730/167939600-ad55bc77-4655-4136-ac16-6b02d90c1f94.PNG' width="30%" alt='screenshot of Chat App chatroom page' >
 </p>
 
