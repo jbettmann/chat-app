@@ -6,10 +6,9 @@ import * as ImagePicker from 'expo-image-picker';
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { storage } from './firebase';
 
-import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
-import { getDownloadURL, ref, uploadBytes, uploadBytesResumable } from '@firebase/storage';
+import { getDownloadURL, ref, uploadBytes } from '@firebase/storage';
 
 
 
@@ -105,6 +104,7 @@ const CustomActions = (props) => {
   const onActionPress = () => {
     const options = ['Choose From Library', 'Take Picture', 'Send Location', 'Cancel'];
     const cancelButtonIndex = options.length - 1;
+    const showSeparators = true;
     showActionSheetWithOptions({
       options,
       cancelButtonIndex,

@@ -48,36 +48,36 @@ export function Chat(props) {
       if (connection.isConnected) {
         setConnection(true);
         console.log('online');
+
+        const auth = getAuth();
+
+        const authUnsubscribe = onAuthStateChanged(auth, async (user) => {
+          if(!user) { 
+            await signInAnonymously(auth);
+          }
+          // set user and logged in text state once authenticated
+          setUid(user.uid);
+          setMessages([]);
+          setUser({ 
+            _id: user.uid,
+            name: username,
+            avatar: 'https://placeimg.com/140/140/any',
+          });
+        //  ques messages database and then calls Snapshot when message updates
+        const userMessageQuery = query(messageRef, orderBy('createdAt', 'desc'));
+        unsubscribe = onSnapshot(userMessageQuery, onCollectionUpdate)
+        });
+        
+          return () => {
+            authUnsubscribe();
+          }
       } else {
         setConnection(false);
         console.log('offline');
         // calls getMessages which stores messages in native storage, AsyncStorage
-        getMessages();
+        return getMessages();
       }
-    });
-    
-    const auth = getAuth();
-
-    const authUnsubscribe = onAuthStateChanged(auth, async (user) => {
-      if(!user) { 
-        await signInAnonymously(auth);
-      }
-      // set user and logged in text state once authenticated
-      setUid(user.uid);
-      setMessages([]);
-      setUser({
-        _id: user.uid,
-        name: username,
-        avatar: 'https://placeimg.com/140/140/any',
-      });
-    //  ques messages database and then calls Snapshot when message updates
-    const userMessageQuery = query(messageRef, orderBy('createdAt', 'desc'));
-    unsubscribe = onSnapshot(userMessageQuery, onCollectionUpdate)
-    });
-    
-    return () => {
-      authUnsubscribe();
-    }
+    });  
   }, [uid]);
 
   // gets messages stored in native storage, AsyncStorage
