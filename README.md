@@ -9,7 +9,7 @@ This is a mobile chat app built with React Native. The app will provide users wi
 
   <img src='https://user-images.githubusercontent.com/96999730/167939600-ad55bc77-4655-4136-ac16-6b02d90c1f94.PNG' width="32%" alt='screenshot of Chat App chatroom page' >
 
-  <img src='https://user-images.githubusercontent.com/96999730/167946700-44694a0d-b19f-4d4d-8bba-6eedf0c40f13.jpeg' width="32%" alt='screenshot of Chat App action sheet view' >
+  <img src='https://user-images.githubusercontent.com/96999730/168155920-4ad218bd-9367-402c-a6b4-70b77f121944.png' width="32%" alt='screenshot of Chat App action sheet view' >
 </p>
 
 ## Technologies
