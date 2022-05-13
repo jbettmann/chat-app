@@ -91,7 +91,7 @@ export function Chat(props) {
         return getMessages();
       }
     });
-  }, [uid]);
+  }, [uid, setConnection]);
 
   // gets messages stored in native storage, AsyncStorage
   const getMessages = async () => {
