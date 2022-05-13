@@ -88,10 +88,10 @@ export function Chat(props) {
         setConnection(false);
         console.log("offline");
         // calls getMessages which stores messages in native storage, AsyncStorage
-        return getMessages();
+        getMessages();
       }
     });
-  }, [uid, setConnection]);
+  }, [uid]);
 
   // gets messages stored in native storage, AsyncStorage
   const getMessages = async () => {
@@ -133,12 +133,13 @@ export function Chat(props) {
       image: message.image || null,
       location: message.location || null,
     });
-    if (message.text === "delete storage") {
-      deleteStorage();
-    }
-    if (message.text === "delete ") {
-      deleteMessages();
-    }
+    // if (message.text === "delete storage") {
+    //   deleteStorage();
+    // }
+    // Deletes messages in localStoarge
+    // if (message.text === "delete ") {
+    //   deleteMessages();
+    // }
   };
 
   // Takes SnapShot of messages collection, then adds new message to message state
